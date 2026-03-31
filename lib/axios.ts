@@ -2,11 +2,12 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
     baseURL: "http://localhost:5000/api/v1", // একদম ক্লিন ইউআরএল
+    withCredentials: true,
 });
 
 // প্রতিবার রিকোয়েস্ট পাঠানোর সময় টোকেন সাথে নিয়ে যাবে
 axiosInstance.interceptors.request.use((config) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

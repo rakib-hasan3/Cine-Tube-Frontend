@@ -15,21 +15,21 @@ export default function LoginForm() {
         try {
             const res = await axiosInstance.post("/auth/login", { email, password });
 
-            // তোমার পাঠানো রেসপন্স অনুযায়ী ডাটা ডিস্ট্রাকচারিং
             const { success, data } = res.data;
 
             if (success && data?.accessToken) {
-                // ১. টোকেন সেভ করো (ব্যাকএন্ডে 'accessToken' নামে আসছে)
-                localStorage.setItem("token", data.accessToken);
 
-                // ২. সেশন বা রিফ্রেশ টোকেন চাইলে রাখতে পারো (অপশনাল)
+                // ✅ FIXED (same name everywhere)
+                localStorage.setItem("accessToken", data.accessToken);
+
+                // optional
                 // localStorage.setItem("refreshToken", data.refreshToken);
 
-                // ৩. ইউজার ডাটা কনটেক্সটে সেট করো
                 setUser(data.user);
 
                 alert("Login Successful! Welcome " + data.user.name);
-                router.push("/");
+
+                router.push("/admin-dashboard");
             }
         } catch (err: any) {
             console.error("Login Error:", err);
