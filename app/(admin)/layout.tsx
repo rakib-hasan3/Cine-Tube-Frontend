@@ -19,7 +19,7 @@ const sidebarItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/admin-dashboard" },
     { label: "Media Management", icon: Film, href: "/media-management" },
     { label: "User Management", icon: Users, href: "/user-management" },
-    { label: "Reviews & Moderation", icon: MessageSquare, href: "/reviews-moderation" },
+    { label: "Reviews & Moderation", icon: MessageSquare, href: "/review-moderation" },
     { label: "Admin Settings", icon: Settings, href: "/admin-settings" },
 ];
 
