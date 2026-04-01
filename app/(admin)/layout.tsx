@@ -17,9 +17,9 @@ import {
 
 const sidebarItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/admin-dashboard" },
-    { label: "Media Management", icon: Film, href: "/admin-media-management" },
-    { label: "User Management", icon: Users, href: "/admin-user-management" },
-    { label: "Reviews & Moderation", icon: MessageSquare, href: "/admin-reviews-moderation" },
+    { label: "Media Management", icon: Film, href: "/media-management" },
+    { label: "User Management", icon: Users, href: "/user-management" },
+    { label: "Reviews & Moderation", icon: MessageSquare, href: "/reviews-moderation" },
     { label: "Admin Settings", icon: Settings, href: "/admin-settings" },
 ];
 
@@ -81,8 +81,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     href={item.href}
                                     onClick={() => setOpen(false)}
                                     className={`relative flex items-center gap-4 px-5 py-3.5 rounded-xl font-semibold transition-all group ${isActive
-                                            ? "bg-indigo-50 text-indigo-600"
-                                            : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                                        ? "bg-indigo-50 text-indigo-600"
+                                        : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                                         }`}
                                 >
                                     {/* 🔥 Active Indicator */}
