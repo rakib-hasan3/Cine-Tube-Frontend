@@ -28,8 +28,12 @@ export default function LoginForm() {
                 setUser(data.user);
 
                 alert("Login Successful! Welcome " + data.user.name);
-
-                router.push("/admin-dashboard");
+                if (data.user.role === "admin") {
+                    router.push("/admin-dashboard");
+                }
+                else {
+                    router.push("/");
+                }
             }
         } catch (err: any) {
             console.error("Login Error:", err);

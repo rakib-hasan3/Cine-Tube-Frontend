@@ -12,15 +12,17 @@ export default function ReviewModeration() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // ১. রিভিউ ডাটা ফেচ করা
     const fetchReviews = async () => {
         setLoading(true);
         try {
-            // তোমার সার্ভিস অনুযায়ী কুয়েরি প্যারামিটার
-            const res = await axiosInstance.get(`/reviews?searchTerm=${searchTerm}`);
+            const url = searchTerm
+                ? `/reviews?searchTerm=${searchTerm}`
+                : `/reviews`; // ✅ empty হলে param দিবা না
+
+            const res = await axiosInstance.get(url);
             setReviews(res.data.data);
-        } catch (err) {
-            console.error("Error loading reviews:", err);
+        } catch (err: any) {
+            console.error("Error loading reviews:", err.response?.data); // 🔥 important
         } finally {
             setLoading(false);
         }
@@ -115,7 +117,7 @@ export default function ReviewModeration() {
 
                                 {/* Actions */}
                                 <div className="flex items-center gap-3">
-                                    <button onClick={() => handleStatusUpdate(rev.id, 'approved')} className="flex items-center gap-2 px-5 py-2.5 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-sm hover:bg-emerald-600 hover:text-white transition-all">
+                                    <button onClick={() => handleStatusUpdate(rev.id, 'APPROVED')} className="flex items-center gap-2 px-5 py-2.5 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-sm hover:bg-emerald-600 hover:text-white transition-all">
                                         <CheckCircle className="w-4 h-4" /> Approve
                                     </button>
                                     <button
