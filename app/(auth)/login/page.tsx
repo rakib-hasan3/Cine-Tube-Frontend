@@ -7,6 +7,7 @@ export const metadata = {
     description: "Login to your CineTube account to start streaming your favorite movies.",
 };
 
+
 export default function LoginPage() {
     return (
         <div className="min-h-screen bg-gradient-to-tr from-indigo-50 via-white to-blue-50 flex items-center justify-center p-6">

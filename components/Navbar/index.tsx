@@ -30,7 +30,7 @@ export default function Navbar() {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-10">
-                    <Link href="/movies" className="text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors">Movies</Link>
+                    <Link href="/media" className="text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors">Movies</Link>
                     <Link href="/series" className="text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors">Series</Link>
                     <Link href="/pricing" className="text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors">Pricing</Link>
                 </div>
