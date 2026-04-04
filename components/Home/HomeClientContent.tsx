@@ -25,8 +25,8 @@ export default function HomeClientContent({ initialMedia }: { initialMedia: any[
         const token = Cookies.get("accessToken");
         if (!token) {
             router.push("/login");
-        } else if (movieId) {
-            router.push(`/media/${movieId}`);
+        } else if (token) {
+            router.push(`/media`);
         }
     };
 
