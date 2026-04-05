@@ -26,7 +26,7 @@ export default function HomeClientContent({ initialMedia }: { initialMedia: any[
         if (!token) {
             router.push("/login");
         } else if (token) {
-            router.push(`/media`);
+            router.push(`/media/${movieId}`);
         }
     };
 
@@ -70,7 +70,7 @@ export default function HomeClientContent({ initialMedia }: { initialMedia: any[
                     <Link href="/media" className="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-bold hover:bg-white/10 transition">View All</Link>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-10">
                     {initialMedia.slice(0, 8).map((movie: any) => (
                         <div
                             key={movie.id || movie._id}

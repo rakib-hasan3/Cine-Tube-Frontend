@@ -3,15 +3,23 @@ import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { User, LogOut, ChevronDown, Bell } from "lucide-react";
 import { useState } from "react";
+import Cookies from "js-cookie";
+import axiosInstance from "@/lib/axios";
 
 export default function Navbar() {
     const { user, setUser } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        setUser(null);
-        window.location.href = "/login";
+    const handleLogout = async () => {
+        try {
+            await axiosInstance.post("/auth/logout");
+        } catch (err) {
+            console.error("Logout failed", err);
+        } finally {
+            localStorage.clear();
+            setUser(null);
+            window.location.replace("/login");
+        }
     };
 
     return (

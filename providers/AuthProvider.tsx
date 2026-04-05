@@ -2,33 +2,27 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import axiosInstance from "@/lib/axios";
+import Cookies from "js-cookie"; // js-cookie ইন্সটল করা না থাকলে করে নিয়েন
 
 const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isMounted, setIsMounted] = useState(false); // হাইড্রেশন চেক
-
+    // AuthProvider.tsx
     useEffect(() => {
-        setIsMounted(true); // যখন ব্রাউজারে মাউন্ট হবে তখন এটি ট্রু হবে
-
         const fetchUser = async () => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                setIsLoading(false);
-                return;
-            }
-
             try {
                 const res = await axiosInstance.get("/auth/me");
-                // তোমার ব্যাকএন্ডের রেসপন্স ফরম্যাট অনুযায়ী সেট করো
-                setUser(res.data.data || res.data.user);
-            } catch (err) {
-                console.error("Auth verify failed", err);
-                localStorage.removeItem("token");
-                setUser(null);
+                setUser(res.data.data);
+            } catch (error: any) {
+                // যদি ৪০১ এরর দেয়, তার মানে ইউজার লগইন করা নেই
+                // এখানে কনসোল এরর না দেখিয়ে শুধু ইউজার নাল করে দিন
+                if (error.response?.status === 401) {
+                    setUser(null);
+                } else {
+                    console.error("Auth error:", error);
+                }
             } finally {
                 setIsLoading(false);
             }
@@ -36,11 +30,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         fetchUser();
     }, []);
-
-    // যদি মাউন্ট না হয়, তবে কিছুই রেন্ডার করবে না (সার্ভার-ক্লায়েন্ট ম্যাচ করানোর জন্য)
-    if (!isMounted) {
-        return null;
-    }
 
     return (
         <AuthContext.Provider value={{ user, setUser, isLoading }}>
