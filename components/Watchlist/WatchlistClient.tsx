@@ -52,7 +52,6 @@ export default function WatchlistClient({ initialWatchlist }: { initialWatchlist
                     // --- এখানে খেয়াল করুন ---
                     // আপনার এপিআই যদি Prisma/Relational DB হয়, তবে মুভির ডাটা 'item.movie' বা 'item.media' এর ভেতর থাকে।
                     const movie = item.media;
-                    console.log("Watchlist Item:", item);
                     return (
                         <div key={item.id} className="group relative">
                             <div className="relative aspect-[3/4] rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl transition-all duration-700 group-hover:scale-[1.02] group-hover:border-indigo-500/50">

@@ -1,4 +1,4 @@
-// app/(common)/pricing/page.tsx
+import PricingButton from "@/components/pricing/PricingButton";
 import { Check, Zap } from "lucide-react";
 
 const plans = [
@@ -16,7 +16,7 @@ const plans = [
         description: "The best experience for movie lovers.",
         features: ["4K Ultra HD", "Ad-free Experience", "Exclusive Content", "4 Devices", "Offline Downloads"],
         buttonText: "Get Premium",
-        popular: true, // এটাকে হাইলাইট করব
+        popular: true,
     },
     {
         name: "Family",
@@ -31,23 +31,21 @@ const plans = [
 export default function PricingPage() {
     return (
         <div className="min-h-screen bg-white py-20 px-6">
-            {/* Header */}
             <div className="max-w-3xl mx-auto text-center mb-20">
-                <h2 className="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-3">Pricing Plans</h2>
+                <h2 className="text-sm font-bold text-indigo-600 uppercase tracking-widest mt-10 mb-3">Pricing Plans</h2>
                 <h1 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight mb-6 leading-tight">
                     Ready to watch your <span className="text-indigo-600">favorites?</span>
                 </h1>
                 <p className="text-xl text-gray-500 font-medium">Choose a plan that fits your lifestyle. No hidden fees.</p>
             </div>
 
-            {/* Pricing Cards */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
                 {plans.map((plan, index) => (
                     <div
                         key={index}
                         className={`relative p-10 rounded-[2.5rem] transition-all duration-500 hover:-translate-y-2 ${plan.popular
-                                ? "bg-gray-900 text-white shadow-[0_40px_80px_-15px_rgba(79,70,229,0.3)] ring-4 ring-indigo-500/10"
-                                : "bg-white border border-gray-100 shadow-xl shadow-gray-100 hover:shadow-2xl"
+                            ? "bg-gray-900 text-white shadow-[0_40px_80px_-15px_rgba(79,70,229,0.3)] ring-4 ring-indigo-500/10"
+                            : "bg-white border border-gray-100 shadow-xl shadow-gray-100 hover:shadow-2xl"
                             }`}
                     >
                         {plan.popular && (
@@ -77,12 +75,12 @@ export default function PricingPage() {
                             ))}
                         </ul>
 
-                        <button className={`w-full py-4 rounded-2xl font-bold transition-all active:scale-95 shadow-lg ${plan.popular
-                                ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-500/20"
-                                : "bg-gray-100 hover:bg-gray-200 text-gray-900"
-                            }`}>
-                            {plan.buttonText}
-                        </button>
+                        {/* ✅ এখানে লজিক ঠিক করা হয়েছে */}
+                        <PricingButton
+                            planName={plan.name}
+                            buttonText={plan.buttonText}
+                            isPopular={plan.popular}
+                        />
                     </div>
                 ))}
             </div>
