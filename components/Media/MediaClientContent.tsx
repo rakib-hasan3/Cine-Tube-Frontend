@@ -63,7 +63,7 @@ export default function MediaClientContent({ initialMedia }: { initialMedia: any
 
             {/* মুভি গ্রিড - কার্ড সাইজ বড় করা হয়েছে */}
             <div className="max-w-7xl mx-auto px-6 md:px-12 mt-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
                     {/* গ্রিড কলাম কমিয়ে কার্ড সাইজ বাড়ানো হয়েছে (gap-10) */}
                     {filteredMovies.map((movie: any) => (
                         <div
