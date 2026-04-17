@@ -20,7 +20,7 @@ export default async function EditProfilePage({ params }: { params: { id: string
     }
 
     return (
-        <main className="min-h-screen bg-[#0a0a0a] py-20 px-6">
+        <main className="min-h-screen bg-[#0a0a0a] mt-20 py-20 px-6">
             <div className="max-w-2xl mx-auto">
                 <div className="mb-10">
                     <h1 className="text-4xl font-black text-white tracking-tighter">Edit Profile</h1>

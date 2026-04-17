@@ -21,7 +21,6 @@ export default function AdminPanel() {
         }
 
     });
-    console.log(dashboardData?.recentMedia);
 
     if (isLoading) return (
         <div className="h-[60vh] flex flex-col items-center justify-center gap-4 text-gray-400 font-black">
@@ -50,13 +49,14 @@ export default function AdminPanel() {
         },
         {
             label: "Monthly Revenue",
-            value: `৳${dashboardData?.revenue || "0"}`,
+            value: `$${dashboardData?.revenue || "0"}`,
             icon: TrendingUp,
             trend: `+${dashboardData?.revenueTrend}%`,
             color: "text-emerald-600",
             bg: "bg-emerald-50"
         },
     ];
+    console.log(dashboardData?.revenue);
 
     return (
         <div className="space-y-10 animate-in fade-in duration-500">

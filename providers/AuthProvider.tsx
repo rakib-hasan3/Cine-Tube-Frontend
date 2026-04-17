@@ -12,13 +12,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // AuthProvider.tsx
     useEffect(() => {
         const fetchUser = async () => {
+            // ১. কুকি থেকে টোকেনটা আগে ধরুন
+            const token = Cookies.get("accessToken");
+
+            // ২. টোকেন না থাকলে অযথা এপিআই কল করার দরকার নেই
+            if (!token) {
+                setUser(null);
+                setIsLoading(false);
+                return;
+            }
+
             try {
+                // ৩. টোকেন থাকলে তবেই প্রোফাইল ডাটা আনতে রিকোয়েস্ট পাঠান
                 const res = await axiosInstance.get("/auth/me");
                 setUser(res.data.data);
             } catch (error: any) {
-                // যদি ৪০১ এরর দেয়, তার মানে ইউজার লগইন করা নেই
-                // এখানে কনসোল এরর না দেখিয়ে শুধু ইউজার নাল করে দিন
                 if (error.response?.status === 401) {
+                    // টোকেন ভুল বা এক্সপায়ার হলে কুকি ক্লিন করে দিন
+                    Cookies.remove("accessToken");
                     setUser(null);
                 } else {
                     console.error("Auth error:", error);
@@ -30,7 +41,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         fetchUser();
     }, []);
-
     return (
         <AuthContext.Provider value={{ user, setUser, isLoading }}>
             {children}

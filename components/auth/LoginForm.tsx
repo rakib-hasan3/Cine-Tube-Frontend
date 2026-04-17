@@ -34,7 +34,7 @@ export default function LoginForm() {
 
                 alert("Login Successful! Welcome " + data.user.name);
 
-                if (data.user.role === "admin") {
+                if (data.user.role === "ADMIN") {
                     router.push("/admin-dashboard");
                 } else {
                     router.push("/");

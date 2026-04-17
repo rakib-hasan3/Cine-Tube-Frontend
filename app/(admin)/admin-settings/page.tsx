@@ -159,7 +159,7 @@ export default function DynamicAdminSettings() {
                         <h3 className="text-xl font-black text-gray-800">Premium Pricing</h3>
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
-                                Monthly Fee (BDT)
+                                Monthly Fee (USD)
                             </label>
                             <input
                                 type="number"

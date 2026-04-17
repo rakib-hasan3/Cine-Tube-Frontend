@@ -16,6 +16,8 @@ import {
     Bell,
     Menu,
 } from "lucide-react";
+import axiosInstance from "@/lib/axios";
+import { useAuth } from "@/providers/AuthProvider";
 
 const sidebarItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/admin-dashboard" },
@@ -29,13 +31,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const pathname = usePathname();
     const router = useRouter();
     const [open, setOpen] = useState(false);
+    const { user, setUser } = useAuth();
 
     const handleLogout = async () => {
-        await fetch("/api/logout", {
-            method: "POST",
-            credentials: "include",
-        });
-        router.push("/");
+        try {
+            await axiosInstance.post("/auth/logout");
+        } catch (err) {
+            console.error("Logout failed", err);
+        } finally {
+            localStorage.clear();
+            setUser(null);
+            window.location.replace("/");
+        }
     };
 
     return (

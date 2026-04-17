@@ -1,16 +1,17 @@
 "use client";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
-import { User, LogOut, ChevronDown, Bell, Menu, X, Crown } from "lucide-react"; // ✅ Crown আইকন যোগ করা হয়েছে
+import { User, LogOut, ChevronDown, Bell, Menu, X, Crown } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation"; // ✅ ১. usePathname ইমপোর্ট করুন
 import axiosInstance from "@/lib/axios";
 
 export default function Navbar() {
     const { user, setUser } = useAuth();
+    const pathname = usePathname(); // ✅ ২. বর্তমান পাথ ধরার জন্য
     const [isOpen, setIsOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // ✅ চেক করছি ইউজার প্রিমিয়াম কি না
     const isPremium = user?.subscription === "PREMIUM" || user?.subscription === "FAMILY";
 
     const handleLogout = async () => {
@@ -58,14 +59,28 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-10">
-                        {navLinks.map((link) => (
-                            <Link key={link.href} href={link.href} className="text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors">
-                                {link.name}
-                            </Link>
-                        ))}
+                        {navLinks.map((link) => {
+                            // ✅ ৩. একটিভ পাথ চেক করার লজিক
+                            const isActive = pathname === link.href;
+
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`relative text-sm font-bold transition-all duration-300 ${isActive ? "text-indigo-600" : "text-gray-500 hover:text-indigo-600"
+                                        }`}
+                                >
+                                    {link.name}
+                                    {/* ✅ ৪. একটিভ থাকলে সুন্দর একটি আন্ডারলাইন ডট বা লাইন */}
+                                    {isActive && (
+                                        <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-indigo-600 rounded-full animate-in slide-in-from-left-full duration-500" />
+                                    )}
+                                </Link>
+                            );
+                        })}
                     </div>
 
-                    {/* Right Side: Auth Logic */}
+                    {/* Right Side Logic (বাকি অংশ একই আছে...) */}
                     <div className="flex items-center gap-5">
                         {user ? (
                             <div className="flex items-center gap-4">
@@ -73,7 +88,6 @@ export default function Navbar() {
                                     <Bell className="w-5 h-5" />
                                 </button>
 
-                                {/* Profile Dropdown */}
                                 <div className="relative">
                                     <button
                                         onClick={() => setIsOpen(!isOpen)}
@@ -83,7 +97,6 @@ export default function Navbar() {
                                             <span className="hidden sm:inline text-sm font-bold text-white uppercase tracking-wider">
                                                 {user.name.split(' ')[0]}
                                             </span>
-                                            {/* ✅ প্রিমিয়াম ব্যাজ */}
                                             {isPremium && (
                                                 <span className="flex items-center gap-0.5 text-[9px] font-black text-amber-400 uppercase tracking-tighter">
                                                     <Crown className="w-2.5 h-2.5 fill-amber-400" /> PRO
@@ -137,14 +150,7 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* Mobile Sidebar (বাকি অংশ একই আছে...) */}
-            {isMobileMenuOpen && (
-                <div
-                    className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm transition-opacity md:hidden"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                />
-            )}
-
+            {/* Mobile Sidebar (Active Link logic added here too) */}
             <div className={`fixed top-0 left-0 h-full w-[280px] bg-white z-[101] shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-10">
@@ -155,33 +161,24 @@ export default function Navbar() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="px-6 py-4 rounded-2xl text-lg font-black text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                        {navLinks.map((link) => {
+                            const isActive = pathname === link.href;
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={`px-6 py-4 rounded-2xl text-lg font-black transition-all ${isActive
+                                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100"
+                                            : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                                        }`}
+                                >
+                                    {link.name}
+                                </Link>
+                            );
+                        })}
                     </div>
-
-                    {/* মোবাইল মেনুতে প্রিমিয়াম স্ট্যাটাস */}
-                    {user && isPremium && (
-                        <div className="mt-6 mx-2 p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
-                            <div className="flex items-center gap-2 text-amber-700 font-black text-sm uppercase">
-                                <Crown className="w-4 h-4 fill-amber-500" />
-                                Premium Member
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="mt-10 pt-10 border-t border-gray-100">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Support</p>
-                        <Link href="/help" className="text-sm font-bold text-gray-600 block px-6 py-2">Help Center</Link>
-                        <Link href="/terms" className="text-sm font-bold text-gray-600 block px-6 py-2">Terms of Service</Link>
-                    </div>
+                    {/* মোবাইল মেনুর বাকি অংশ... */}
                 </div>
             </div>
         </>
