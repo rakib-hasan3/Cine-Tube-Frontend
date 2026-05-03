@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Play, ChevronLeft, Share2, Heart, ThumbsUp, MoreVertical, BookmarkPlus, Check } from "lucide-react";
 import Link from "next/link";
 import ReviewSection from "./Review/ReviewSection";
+import MovieChat from "@/components/MovieChat";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner"; // আপনি চাইলে react-hot-toast বা sonner ব্যবহার করতে পারেন
@@ -154,6 +155,9 @@ export default function MediaDetailsClient({ movie }: { movie: any }) {
                     </div>
                 </div>
             </main>
+
+            {/* AI Chatbot */}
+            <MovieChat movieId={movie.id} />
         </div>
     );
 }

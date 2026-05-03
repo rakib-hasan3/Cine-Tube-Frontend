@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000/api/v1", // একদম ক্লিন ইউআরএল
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
     withCredentials: true,
 });
 
@@ -13,6 +13,7 @@ axiosInstance.interceptors.request.use((config) => {
     }
     return config;
 });
+
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
