@@ -93,7 +93,7 @@ export default function MediaManagement() {
                         <input
                             type="text"
                             placeholder="Search titles, genres, directors..."
-                            className="pl-12 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] outline-none focus:ring-4 focus:ring-indigo-500/10 w-full font-medium shadow-xl shadow-gray-100/50 transition-all"
+                            className="pl-12 pr-6 py-4 bg-white border border-gray-100 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/5 w-full md:w-80 font-medium text-gray-900 placeholder-gray-500 shadow-xl shadow-gray-100/50 transition-all"
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>

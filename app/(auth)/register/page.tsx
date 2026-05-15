@@ -1,5 +1,7 @@
+// app/(auth)/register/page.tsx (Server Component)
 import RegisterForm from "@/components/auth/RegisterForm";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 export const metadata = {
     title: "Create Account | CineTube",
@@ -8,30 +10,46 @@ export const metadata = {
 
 export default function RegisterPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 flex items-center justify-center p-6">
-            <div className="w-full max-w-md bg-white/70 backdrop-blur-xl p-10 rounded-3xl shadow-[0_20px_50px_rgba(79,70,229,0.1)] border border-white">
+        <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center p-6 pt-20 relative overflow-hidden">
+            {/* Background Decorative Glows */}
+            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full" />
 
-                {/* Header */}
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">
-                        Create <span className="text-indigo-600">Account</span>
-                    </h2>
-                    <p className="text-gray-500 mt-2 font-medium">Join CineTube and start streaming</p>
+            <div className="w-full max-w-[400px] relative z-10">
+                {/* Back to Home */}
+                <Link
+                    href="/"
+                    className="inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-4 font-bold text-sm uppercase tracking-widest group"
+                >
+                    <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                    Back to Home
+                </Link>
+
+                <div className="bg-white/[0.03] backdrop-blur-3xl p-6 md:p-8 rounded-[2.5rem] border border-white/10 shadow-2xl">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl font-black text-white tracking-tighter mb-1">
+                            Join <span className="text-indigo-500">CineTube.</span>
+                        </h2>
+                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Premium Streaming</p>
+                    </div>
+
+                    <RegisterForm />
+
+                    <div className="mt-8 text-center">
+                        <p className="text-sm text-gray-500 font-medium">
+                            Already have an account?{" "}
+                            <Link href="/login" className="text-indigo-500 font-bold hover:text-indigo-400 transition-colors">
+                                Sign In
+                            </Link>
+                        </p>
+                    </div>
                 </div>
 
-                {/* Client Side Form */}
-                <RegisterForm />
-
-                {/* Footer */}
-                <div className="mt-8 text-center">
-                    <p className="text-sm text-gray-500 font-medium">
-                        Already have an account?{" "}
-                        <Link href="/login" className="text-indigo-600 font-bold hover:underline">
-                            Log In
-                        </Link>
-                    </p>
+                {/* Footer Links */}
+                <div className="mt-6 flex justify-center gap-6 text-[10px] font-black text-gray-600 uppercase tracking-widest">
+                    <Link href="#" className="hover:text-gray-400 transition-colors">Privacy Policy</Link>
+                    <Link href="#" className="hover:text-gray-400 transition-colors">Terms of Service</Link>
                 </div>
-
             </div>
         </div>
     );

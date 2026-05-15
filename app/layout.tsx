@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
+import QueryProvider from "@/providers/QueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,14 +21,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <Navbar />
-          <main className="min-h-screen">
-            {children}
-          </main>
+        <QueryProvider>
+          <AuthProvider>
+            <Navbar />
+            <main className="min-h-screen">
+              {children}
+            </main>
 
-          <Toaster position="top-center" richColors />
-        </AuthProvider>
+            <Toaster position="top-center" richColors />
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

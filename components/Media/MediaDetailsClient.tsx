@@ -1,17 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Play, ChevronLeft, Share2, Heart, ThumbsUp, MoreVertical, BookmarkPlus, Check } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import ReviewSection from "./Review/ReviewSection";
 import MovieChat from "@/components/MovieChat";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
-import { toast } from "sonner"; // আপনি চাইলে react-hot-toast বা sonner ব্যবহার করতে পারেন
+import { toast } from "sonner";
 
-export default function MediaDetailsClient({ movie }: { movie: any }) {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false); // See more logic
+declare global {
+    interface Window {
+        onYouTubeIframeAPIReady: () => void;
+        YT: any;
+    }
+}
+
+export default function MediaDetailsClient({ movie, autoplay = false }: { movie: any, autoplay?: boolean }) {
+    const [isPlaying, setIsPlaying] = useState(autoplay);
+    const [isExpanded, setIsExpanded] = useState(false);
     const queryClient = useQueryClient();
+    const searchParams = useSearchParams();
+    const resumeTime = searchParams.get("resumeTime");
+    
+    const playerRef = useRef<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const trackingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     // ১. সাজেস্টেড মুভি লিস্ট আনা
     const { data: relatedData } = useQuery({
@@ -25,16 +39,15 @@ export default function MediaDetailsClient({ movie }: { movie: any }) {
     // ২. Watchlist এর জন্য ফিক্স
     const { mutate: addToWatchlist } = useMutation({
         mutationFn: async () => {
-            // বডিতে mediaId পাঠাতে হবে
             return await axiosInstance.post(`/watchlist`, {
-                mediaId: movie.id  // ✅ এই লাইনটি যোগ করুন
+                mediaId: movie.id
             });
         },
         onSuccess: () => {
             toast.success("Added to Watchlist!");
         }
     });
-    // ৪. Share Link Copy Logic
+
     const handleShare = () => {
         const url = window.location.href;
         navigator.clipboard.writeText(url);
@@ -44,6 +57,98 @@ export default function MediaDetailsClient({ movie }: { movie: any }) {
     const getYouTubeId = (url: string) => {
         const match = url?.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
         return (match && match[2].length === 11) ? match[2] : null;
+    };
+
+    // ৩. YouTube Player Logic
+    useEffect(() => {
+        if (!isPlaying) return;
+
+        const videoId = getYouTubeId(movie?.youtubeLink);
+        if (!videoId) return;
+
+        // Load YouTube API if not loaded
+        if (!window.YT) {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+        }
+
+        const onPlayerReady = (event: any) => {
+            if (resumeTime) {
+                event.target.seekTo(parseFloat(resumeTime), true);
+            }
+            event.target.playVideo();
+        };
+
+        const onPlayerStateChange = (event: any) => {
+            // YT.PlayerState.PLAYING = 1
+            if (event.data === 1) {
+                startTracking();
+            } else {
+                stopTracking();
+            }
+        };
+
+        const initPlayer = () => {
+            playerRef.current = new window.YT.Player('youtube-player', {
+                height: '100%',
+                width: '100%',
+                videoId: videoId,
+                playerVars: {
+                    autoplay: 1,
+                    modestbranding: 1,
+                    rel: 0,
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+
+        if (window.YT && window.YT.Player) {
+            initPlayer();
+        } else {
+            window.onYouTubeIframeAPIReady = initPlayer;
+        }
+
+        return () => {
+            stopTracking();
+            if (playerRef.current) {
+                playerRef.current.destroy();
+            }
+        };
+    }, [isPlaying, movie?.youtubeLink, resumeTime]);
+
+    const startTracking = () => {
+        if (trackingIntervalRef.current) return;
+
+        trackingIntervalRef.current = setInterval(async () => {
+            if (playerRef.current && playerRef.current.getCurrentTime) {
+                const currentTime = playerRef.current.getCurrentTime();
+                const duration = playerRef.current.getDuration();
+                
+                if (currentTime > 0 && duration > 0) {
+                    try {
+                        await axiosInstance.post("/continue-watching", {
+                            movieId: movie.id,
+                            currentTime: Math.floor(currentTime),
+                            duration: Math.floor(duration)
+                        });
+                    } catch (error) {
+                        console.error("Tracking Error:", error);
+                    }
+                }
+            }
+        }, 10000); // Track every 10 seconds
+    };
+
+    const stopTracking = () => {
+        if (trackingIntervalRef.current) {
+            clearInterval(trackingIntervalRef.current);
+            trackingIntervalRef.current = null;
+        }
     };
 
     return (
@@ -62,12 +167,7 @@ export default function MediaDetailsClient({ movie }: { movie: any }) {
                 <div className="lg:col-span-8 space-y-6">
                     <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/5 group">
                         {isPlaying ? (
-                            <iframe
-                                className="w-full h-full"
-                                src={`https://www.youtube.com/embed/${getYouTubeId(movie?.youtubeLink)}?autoplay=1&rel=0`}
-                                allowFullScreen
-                                allow="autoplay"
-                            />
+                            <div id="youtube-player" className="w-full h-full"></div>
                         ) : (
                             <div className="absolute inset-0 cursor-pointer overflow-hidden" onClick={() => setIsPlaying(true)}>
                                 <img src={movie?.backdropUrl || movie?.posterUrl} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-70" alt="" />
@@ -90,13 +190,9 @@ export default function MediaDetailsClient({ movie }: { movie: any }) {
                                     <h4 className="font-black text-sm uppercase tracking-tight">CineTube Official</h4>
                                     <p className="text-[10px] text-gray-500 font-bold">Verified Content</p>
                                 </div>
-
                             </div>
 
                             <div className="flex items-center gap-2">
-
-
-                                {/* Share Logic */}
                                 <button
                                     onClick={handleShare}
                                     className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 font-bold text-xs transition-all"
@@ -104,7 +200,6 @@ export default function MediaDetailsClient({ movie }: { movie: any }) {
                                     <Share2 className="w-4 h-4" /> Share
                                 </button>
 
-                                {/* Watchlist Logic */}
                                 <button
                                     onClick={() => addToWatchlist()}
                                     className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 font-bold text-xs transition-all"
@@ -115,7 +210,6 @@ export default function MediaDetailsClient({ movie }: { movie: any }) {
                         </div>
                     </div>
 
-                    {/* ডেসক্রিপশন বক্স (See More Logic) */}
                     <div className="bg-white/5 rounded-2xl p-5 hover:bg-white/[0.07] transition-all">
                         <div className="flex gap-4 mb-3 text-xs font-black uppercase text-gray-400">
                             <span>{movie?.views || "0"} Views</span>

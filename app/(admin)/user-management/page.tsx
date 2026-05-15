@@ -94,18 +94,21 @@ export default function UserManagement() {
                         <input
                             type="text"
                             placeholder="Find citizen..."
-                            className="pl-12 pr-6 py-4 bg-white border border-gray-100 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/5 w-full font-bold text-sm shadow-xl shadow-gray-100/50 transition-all"
+                            className="pl-12 pr-6 py-4 bg-white border border-gray-100 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/5 w-full font-bold text-sm text-gray-900 placeholder-gray-500 shadow-xl shadow-gray-100/50 transition-all"
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <select
-                        onChange={(e) => setFilterRole(e.target.value)}
-                        className="bg-white border border-gray-100 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-gray-500 outline-none focus:ring-4 focus:ring-indigo-500/5 shadow-xl shadow-gray-100/50 cursor-pointer"
-                    >
-                        <option value="ALL">All Roles</option>
-                        <option value="ADMIN">Admin Only</option>
-                        <option value="USER">Standard Users</option>
-                    </select>
+                    <div className="relative inline-block w-full sm:w-80">
+  <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+  <select
+    onChange={(e) => setFilterRole(e.target.value)}
+    className="bg-white border border-gray-100 pl-12 pr-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-gray-500 focus:ring-4 focus:ring-indigo-500/5 shadow-xl transition-all appearance-none cursor-pointer w-full"
+  >
+    <option value="ALL">All Roles</option>
+    <option value="ADMIN">Admin Only</option>
+    <option value="USER">Standard Users</option>
+  </select>
+</div>
                 </div>
             </div>
 

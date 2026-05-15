@@ -116,7 +116,7 @@ export default function ReviewModeration() {
                     <input
                         type="text"
                         placeholder="Search user or movie..."
-                        className="pl-12 pr-6 py-3.5 bg-white border border-gray-100 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/5 w-full md:w-80 font-medium shadow-sm transition-all"
+                        className="pl-12 pr-6 py-4 bg-white border border-gray-100 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/5 w-full md:w-80 font-medium text-gray-900 placeholder-gray-500 shadow-xl shadow-gray-100/50 transition-all"
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>

@@ -43,7 +43,7 @@ export default function MovieChat({ movieId }: MovieChatProps) {
         setIsLoading(true);
 
         try {
-            const res = await axiosInstance.post("/ai/hybrid-chat", {
+            const res = await axiosInstance.post("/ai/cinetube-chat", {
                 message: userMsg.content,
                 movieId,
             });
@@ -69,7 +69,6 @@ export default function MovieChat({ movieId }: MovieChatProps) {
     };
 
     const formatText = (text: string) => {
-        // Basic markdown bold parsing and line breaks
         const parts = text.split(/(\*\*.*?\*\*)/g);
         return parts.map((part, i) => {
             if (part.startsWith('**') && part.endsWith('**')) {
@@ -90,7 +89,6 @@ export default function MovieChat({ movieId }: MovieChatProps) {
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="absolute bottom-16 right-0 w-[340px] sm:w-[380px] h-[500px] max-h-[75vh] flex flex-col overflow-hidden rounded-2xl bg-[#0f0f0f]/90 backdrop-blur-2xl border border-white/10 shadow-2xl"
                     >
-                        {/* Header */}
                         <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-indigo-900/40 to-transparent border-b border-white/10">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center border border-indigo-400/50 shadow-[0_0_10px_rgba(79,70,229,0.5)]">
@@ -112,7 +110,6 @@ export default function MovieChat({ movieId }: MovieChatProps) {
                             </button>
                         </div>
 
-                        {/* Messages Area */}
                         <div className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar">
                             {messages.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-70">
@@ -121,7 +118,7 @@ export default function MovieChat({ movieId }: MovieChatProps) {
                                     </div>
                                     <div className="space-y-1">
                                         <h4 className="text-sm font-bold text-white uppercase tracking-wider">Welcome to CineBot</h4>
-                                        <p className="text-xs font-medium text-gray-400">Ask me anything about this movie<br/>or get similar recommendations!</p>
+                                        <p className="text-xs font-medium text-gray-400">Ask me anything about this movie<br />or get similar recommendations!</p>
                                     </div>
                                 </div>
                             ) : (
@@ -138,11 +135,10 @@ export default function MovieChat({ movieId }: MovieChatProps) {
                                             </div>
                                         )}
                                         <div
-                                            className={`max-w-[85%] px-4 py-3 text-[13px] leading-relaxed shadow-sm ${
-                                                msg.role === "user"
+                                            className={`max-w-[85%] px-4 py-3 text-[13px] leading-relaxed shadow-sm ${msg.role === "user"
                                                     ? "bg-indigo-600 text-white rounded-2xl rounded-br-sm"
                                                     : "bg-white/10 text-gray-200 border border-white/10 rounded-2xl rounded-bl-sm"
-                                            }`}
+                                                }`}
                                         >
                                             <div className="whitespace-pre-wrap leading-[1.6]">{formatText(msg.content)}</div>
                                         </div>
@@ -167,7 +163,6 @@ export default function MovieChat({ movieId }: MovieChatProps) {
                             <div ref={messagesEndRef} className="h-1" />
                         </div>
 
-                        {/* Input Area */}
                         <div className="p-4 bg-[#0a0a0a]/80 backdrop-blur-md border-t border-white/10">
                             <form
                                 onSubmit={handleSendMessage}
@@ -194,7 +189,6 @@ export default function MovieChat({ movieId }: MovieChatProps) {
                 )}
             </AnimatePresence>
 
-            {/* Floating Bubble */}
             <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

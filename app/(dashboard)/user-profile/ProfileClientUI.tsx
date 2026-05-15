@@ -25,7 +25,7 @@ export default function ProfileClientUI({ initialUser }: { initialUser: any }) {
     };
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white pb-20 font-sans">
+        <div className="min-h-screen pt-10 bg-[#050505] text-white  font-sans">
             {/* প্রিমিয়াম ব্যাকগ্রাউন্ড গ্লো */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-indigo-600/10 blur-[120px] pointer-events-none"></div>
 

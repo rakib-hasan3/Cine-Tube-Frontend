@@ -68,14 +68,13 @@ export default function PricingButton({ planName, buttonText, isPopular }: Prici
     return (
         <button
             onClick={handleSubscribe}
-            // isActive ট্রু হলে বাটন ডিজেবল হবে এবং সবুজ হবে
             disabled={isActive}
             className={`w-full py-4 rounded-2xl font-bold transition-all shadow-lg 
                 ${isActive
-                    ? "bg-emerald-600 text-white cursor-not-allowed opacity-100" // সবুজ কালার
+                    ? "bg-emerald-600 text-white cursor-not-allowed opacity-100"
                     : isPopular
                         ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-500/20 active:scale-95"
-                        : "bg-gray-100 hover:bg-gray-200 text-gray-900 active:scale-95"
+                        : "bg-white/10 hover:bg-white/20 text-white active:scale-95 border border-white/10"
                 }`}
         >
             {isActive ? "Current Plan ✓" : buttonText}
